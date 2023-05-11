@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "507135990291",
+    "firebase_url": "https://quilistapp-default-rtdb.firebaseio.com",
+    "project_id": "quilistapp",
+    "storage_bucket": "quilistapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:507135990291:android:94f90a5534a88f64cf7de6",
+        "android_client_info": {
+          "package_name": "com.example.quicklist"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "507135990291-ja7sqj78s95e13fsa1cqb6m7qe9qc23u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRxQUWxIlXc9a9BtDZvDb2Sr6687TsXlw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "507135990291-ja7sqj78s95e13fsa1cqb6m7qe9qc23u.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "507135990291-3b1c9bnfueutk3to0odq1li2562kprk8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.quilist"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:507135990291:android:b9aba48f89b25c0bcf7de6",
+        "android_client_info": {
+          "package_name": "com.example.quilist"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "507135990291-ja7sqj78s95e13fsa1cqb6m7qe9qc23u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRxQUWxIlXc9a9BtDZvDb2Sr6687TsXlw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "507135990291-ja7sqj78s95e13fsa1cqb6m7qe9qc23u.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "507135990291-3b1c9bnfueutk3to0odq1li2562kprk8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.quilist"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
