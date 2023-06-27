@@ -1,5 +1,6 @@
 import 'package:quilist/pages/chat_page.dart';
 import 'package:quilist/widgets/widgets.dart';
+import 'package:quilist/pages/list.dart';
 import 'package:flutter/material.dart';
 
 class GroupTile extends StatefulWidget {
@@ -24,7 +25,7 @@ class _GroupTileState extends State<GroupTile> {
       onTap: () {
         nextScreen(
             context,
-            ChatPage(
+            ListPage(
               groupId: widget.groupId,
               groupName: widget.groupName,
               userName: widget.userName,

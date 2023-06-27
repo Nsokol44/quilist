@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 class DatabaseService {
   final String? uid;
@@ -43,6 +44,9 @@ class DatabaseService {
       "groupId": "",
       "recentMessage": "",
       "recentMessageSender": "",
+      "recentTodo": "",
+      "recentTodoSender": "",
+      "groupList": [],
     });
     // update the members
     await groupDocumentReference.update({
@@ -62,6 +66,15 @@ class DatabaseService {
     return groupCollection
         .doc(groupId)
         .collection("messages")
+        .orderBy("time")
+        .snapshots();
+  }
+
+  //Get the todo items.
+  getTodos(String groupId) async {
+    return groupCollection
+        .doc(groupId)
+        .collection("quilists")
         .orderBy("time")
         .snapshots();
   }
@@ -133,4 +146,19 @@ class DatabaseService {
       "recentMessageTime": chatMessageData['time'].toString(),
     });
   }
+
+  //Add to todo list
+  addListItem(String groupId, Map<String, dynamic> listItem) async {
+    groupCollection.doc(groupId).collection("quilists").add(listItem);
+    groupCollection.doc(groupId).update({
+      "recentTodo": listItem['todoItem'],
+      "recentTodoSender": listItem['sender'],
+      "recentTodoTime": listItem['time'].toString(),
+    });
+  }
+
+  //Remove from Todo list
+  // removeListItem(String groupId, index) async {
+  //   groupCollection.doc(groupId).collection("quilists").doc(uid).delete();
+  // }
 }

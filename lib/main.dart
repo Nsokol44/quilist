@@ -54,7 +54,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       theme: ThemeData(
           primaryColor: Constants().primaryColor,
-          scaffoldBackgroundColor: Colors.amber[600]),
+          scaffoldBackgroundColor: Colors.blue[400]),
       debugShowCheckedModeBanner: false,
       home: _isSignedIn ? const HomePage() : const LoginPage(),
     );

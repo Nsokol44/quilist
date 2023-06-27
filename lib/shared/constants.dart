@@ -5,5 +5,5 @@ class Constants {
   static String apiKey = "AIzaSyDttBWmj6KfFvX9DmpVfXpVCsj98QK12ns";
   static String messagingSenderId = "507135990291";
   static String projectId = "quilistapp";
-  final primaryColor = Color.fromARGB(255, 0, 0, 0);
+  final primaryColor = Color.fromARGB(255, 12, 20, 159);
 }

@@ -1,17 +1,17 @@
+import 'package:quilist/pages/chat_page.dart';
 import 'package:quilist/pages/group_info.dart';
 import 'package:quilist/service/database_service.dart';
 import 'package:quilist/widgets/message_tile.dart';
 import 'package:quilist/widgets/widgets.dart';
 import 'package:quilist/pages/home_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:quilist/pages/list.dart';
 import 'package:flutter/material.dart';
 
-class ChatPage extends StatefulWidget {
+class ListPage extends StatefulWidget {
   final String groupId;
   final String groupName;
   final String userName;
-  const ChatPage(
+  const ListPage(
       {Key? key,
       required this.groupId,
       required this.groupName,
@@ -19,13 +19,16 @@ class ChatPage extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<ChatPage> createState() => _ChatPageState();
+  State<ListPage> createState() => _ListPageState();
 }
 
-class _ChatPageState extends State<ChatPage> {
-  Stream<QuerySnapshot>? chats;
+class _ListPageState extends State<ListPage> {
+  Stream<QuerySnapshot>? todos;
   TextEditingController messageController = TextEditingController();
   String admin = "";
+  bool isChecked = false;
+  List<bool> checkboxValues = [];
+  var newLength;
 
   @override
   void initState() {
@@ -40,9 +43,9 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   getChatandAdmin() {
-    DatabaseService().getChats(widget.groupId).then((val) {
+    DatabaseService().getTodos(widget.groupId).then((val) {
       setState(() {
-        chats = val;
+        todos = val;
       });
     });
     DatabaseService().getGroupAdmin(widget.groupId).then((val) {
@@ -52,6 +55,7 @@ class _ChatPageState extends State<ChatPage> {
     });
   }
 
+  // Add widgets here.
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,7 +92,7 @@ class _ChatPageState extends State<ChatPage> {
                 width: MediaQuery.of(context).size.width,
                 child: Stack(
                   children: [
-                    chatMessages(),
+                    quilistItems(),
                     SizedBox(height: 200),
                   ],
                 ),
@@ -106,7 +110,7 @@ class _ChatPageState extends State<ChatPage> {
                   controller: messageController,
                   style: const TextStyle(color: Colors.white),
                   decoration: const InputDecoration(
-                    hintText: "Send a message...",
+                    hintText: "Add a Todo...",
                     hintStyle: TextStyle(color: Colors.white, fontSize: 16),
                     border: InputBorder.none,
                   ),
@@ -116,7 +120,7 @@ class _ChatPageState extends State<ChatPage> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    sendMessage();
+                    addTodo();
                   },
                   child: Container(
                     height: 50,
@@ -148,27 +152,71 @@ class _ChatPageState extends State<ChatPage> {
                 },
                 child: Text('List')),
             SizedBox(),
-            ElevatedButton(onPressed: () {}, child: Text('Chat')),
+            ElevatedButton(
+                onPressed: () {
+                  nextScreen(
+                      context,
+                      ChatPage(
+                        userName: widget.userName,
+                        groupId: widget.groupId,
+                        groupName: widget.groupName,
+                      ));
+                },
+                child: Text('Chat')),
           ]),
         ],
       ),
     );
   }
 
-//Return chat messages function
-  chatMessages() {
+//View all Todos
+  quilistItems() {
     return StreamBuilder(
-      stream: chats,
+      stream: todos,
       builder: (context, AsyncSnapshot snapshot) {
+        if (snapshot.hasData) {
+          final List<DocumentSnapshot> docs = snapshot.data!.docs;
+          if (checkboxValues.length != docs.length) {
+            checkboxValues =
+                List<bool>.filled(snapshot.data!.docs.length, false);
+          }
+        }
         return snapshot.hasData
             ? ListView.builder(
                 itemCount: snapshot.data.docs.length,
                 itemBuilder: (context, index) {
-                  return MessageTile(
-                      message: snapshot.data.docs[index]['message'],
-                      sender: snapshot.data.docs[index]['sender'],
-                      sentByMe: widget.userName ==
-                          snapshot.data.docs[index]['sender']);
+                  bool? isChecked = checkboxValues[index];
+
+                  return Card(
+                      elevation: 5,
+                      child: ListTile(
+                        leading: FlutterLogo(size: 56.0),
+                        title: Text(snapshot.data.docs[index]['todoItem']),
+                        subtitle: Text(snapshot.data.docs[index]['sender']),
+                        trailing: Wrap(
+                          spacing: 2,
+                          children: <Widget>[
+                            Checkbox(
+                              value: isChecked,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  checkboxValues[index] = value ?? false;
+                                });
+                              },
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.delete),
+                              onPressed: () {
+                                DocumentSnapshot docSnapshot =
+                                    snapshot.data.docs[index];
+                                DocumentReference docRef =
+                                    docSnapshot.reference;
+                                docRef.delete();
+                              },
+                            ),
+                          ],
+                        ),
+                      ));
                 },
               )
             : Container();
@@ -176,19 +224,25 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-//Send a chat message function.
-  sendMessage() {
+//Add a new todo.
+  addTodo() {
     if (messageController.text.isNotEmpty) {
-      Map<String, dynamic> chatMessageMap = {
-        "message": messageController.text,
+      Map<String, dynamic> listItem = {
+        "todoItem": messageController.text,
         "sender": widget.userName,
         "time": DateTime.now().millisecondsSinceEpoch,
       };
 
-      DatabaseService().sendMessage(widget.groupId, chatMessageMap);
+      DatabaseService().addListItem(widget.groupId, listItem);
       setState(() {
         messageController.clear();
       });
     }
   }
+
+//Update checkboxValues length
+//Remove a todo
+//  removeTodo() {
+//    DatabaseService().removeListItem(widget.groupId);
+  // }
 }
